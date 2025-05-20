@@ -3,36 +3,75 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Survey Form</title>
+  <title>Script Ranking Survey</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container glass">
-    <h1>Feedback Survey</h1>
+    <h1>Rank the Madame Scripts</h1>
     <form onsubmit="submitSurvey(); return false;">
-      <label>
-        1. What is your name?
-        <input type="text" id="name" required />
-      </label>
-      <label>
-        2. How satisfied are you with our service?
-        <select id="satisfaction" required>
-          <option value="">Select one</option>
-          <option value="Very satisfied">Very satisfied</option>
-          <option value="Satisfied">Satisfied</option>
-          <option value="Neutral">Neutral</option>
-          <option value="Dissatisfied">Dissatisfied</option>
-        </select>
-      </label>
-      <label>
-        3. Any suggestions or feedback?
-        <textarea id="feedback" required></textarea>
-      </label>
+      <p>Drag to reorder the scripts from your favorite (top) to least favorite (bottom):</p>
+      <ul id="sortable-list"></ul>
       <button type="submit">Submit</button>
       <p id="message"></p>
     </form>
   </div>
 
   <script type="module" src="app.js"></script>
+  <script>
+    const scripts = [
+      "Better Scrolling",
+      "Clear Colors",
+      "Filter By Color & Name",
+      "Odd One Out",
+      "Optimize List",
+      "PID Adder",
+      "PID to VID Search",
+      "Refresh Search",
+      "Retouching Extras",
+      "Runway Check",
+      "VID Comparison"
+    ];
+
+    const sortableList = document.getElementById("sortable-list");
+    scripts.forEach(script => {
+      const li = document.createElement("li");
+      li.textContent = script;
+      li.draggable = true;
+      li.classList.add("draggable-item");
+      sortableList.appendChild(li);
+    });
+
+    let draggedItem = null;
+
+    document.querySelectorAll(".draggable-item").forEach(item => {
+      item.addEventListener("dragstart", function () {
+        draggedItem = item;
+        setTimeout(() => item.style.display = "none", 0);
+      });
+
+      item.addEventListener("dragend", function () {
+        setTimeout(() => {
+          draggedItem.style.display = "block";
+          draggedItem = null;
+        }, 0);
+      });
+
+      item.addEventListener("dragover", e => e.preventDefault());
+
+      item.addEventListener("drop", function () {
+        if (draggedItem !== this) {
+          const allItems = [...sortableList.querySelectorAll(".draggable-item")];
+          const draggedIndex = allItems.indexOf(draggedItem);
+          const targetIndex = allItems.indexOf(this);
+          if (draggedIndex < targetIndex) {
+            sortableList.insertBefore(draggedItem, this.nextSibling);
+          } else {
+            sortableList.insertBefore(draggedItem, this);
+          }
+        }
+      });
+    });
+  </script>
 </body>
 </html>
