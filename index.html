@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Survey Form</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container glass">
+    <h1>Feedback Survey</h1>
+    <form onsubmit="submitSurvey(); return false;">
+      <label>
+        1. What is your name?
+        <input type="text" id="name" required />
+      </label>
+      <label>
+        2. How satisfied are you with our service?
+        <select id="satisfaction" required>
+          <option value="">Select one</option>
+          <option value="Very satisfied">Very satisfied</option>
+          <option value="Satisfied">Satisfied</option>
+          <option value="Neutral">Neutral</option>
+          <option value="Dissatisfied">Dissatisfied</option>
+        </select>
+      </label>
+      <label>
+        3. Any suggestions or feedback?
+        <textarea id="feedback" required></textarea>
+      </label>
+      <button type="submit">Submit</button>
+      <p id="message"></p>
+    </form>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
