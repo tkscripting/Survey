@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Feedback Survey</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="background-shapes" id="backgroundLayer1"></div>
+  <div class="background-shapes" id="backgroundLayer2"></div>  
+
+  <div class="container glass">
+    <h1>Feedback Survey</h1>
+    <form onsubmit="submitSurvey(); return false;" autocomplete="off">
+      
+      <div class="section-block">
+        <p class="section-title"><strong>Rank Madame Scripts</strong></p>
+        <ul id="sortable-scripts"></ul>
+      </div>
+
+      <div class="section-block">
+        <p class="section-title"><strong>Rank Photoshop Actions</strong></p>
+        <ul id="sortable-actions"></ul>
+      </div>
+
+      <div class="section-block">
+        <p class="section-title"><strong>Leave feedback on a specific Script or Action</strong></p>
+        <div id="feedback-group-container"></div>
+        <div class="button-pair">
+            <button type="button" class="add-button" onclick="addFeedbackGroup(this)">+ Add Another</button>
+            <button type="button" class="remove-button" onclick="removeFeedbackGroup(this)">− Remove Last</button>
+          </div>    
+      </div>
+
+      <div class="section-block">
+        <p class="section-title"><strong>Suggest a new feature or tool</strong></p>
+        <div id="suggestion-group-container"></div>
+        <div class="button-pair">
+            <button type="button" class="add-button" onclick="addSuggestionGroup(this)">+ Add Another Suggestion</button>
+            <button type="button" class="remove-button" onclick="removeSuggestionGroup(this)">− Remove Last</button>
+          </div> 
+      </div>
+
+      <div class="form-button-group">
+        <button id="submitBtn" type="submit" class="submit-button">Submit</button>
+        <button type="button" class="info" onclick="toggleResults(this)">View Results</button>
+      </div>      
+      
+    </form>
+  </div>
+
+  <div id="results-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeResultsModal()">&times;</span>
+      <div id="results-container"></div>
+    </div>
+  </div>
+
+  <div id="password-modal" class="modal" style="display: none;">
+    <div class="modal-content" style="max-width: 320px; padding: 1.5rem; text-align: center; height: auto;">
+      <span class="close-btn" onclick="closePasswordModal()">&times;</span>
+      <h2 style="margin-bottom: 1rem;">Enter Password</h2>
+      <form id="password-form">
+        <input id="results-password-input" type="password" placeholder="Password"
+               style="padding: 0.5rem; border-radius: 8px; border: 1px solid #ccc; width: 100%;" />
+        <button id="password-submit-btn" type="submit" class="remove-button" style="margin-top: 1rem;">Submit</button>
+      </form>
+    </div>
+  </div>
+  
+  <!-- Firebase + App -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
