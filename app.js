@@ -1,35 +1,33 @@
 // Firebase config
 const firebaseConfig = {
-    apiKey: "AIzaSyC09qGkeqtH0aCnWwr8hXq13vaGuBjhkBE",
-    authDomain: "survey-e58d2.firebaseapp.com",
-    projectId: "survey-e58d2",
-    storageBucket: "survey-e58d2.firebasestorage.app",
-    messagingSenderId: "931174105381",
-    appId: "1:931174105381:web:6254fd5b4a8eb4d0945acc",
-    measurementId: "G-6NDF8KBEM1"
-  };
-  
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-  const db = firebase.firestore();
-  
-  // Track signed-in user
-  let currentUser = null;
-  const reviewerUIDs = [
-    "hb4pd6A2nvNTCUX39vBTvVsET5q1"
-  ];
-  
-  auth.onAuthStateChanged(user => {
-    if (user) {
-      currentUser = user;
-      console.log("Signed in as:", user.uid);
-    } else {
-      auth.signInAnonymously().catch(err => {
-        console.error("Anonymous sign-in failed:", err.message);
-      });
-    }
+  apiKey: "AIzaSyC09qGkeqtH0aCnWwr8hXq13vaGuBjhkBE",
+  authDomain: "survey-e58d2.firebaseapp.com",
+  projectId: "survey-e58d2",
+  storageBucket: "survey-e58d2.firebasestorage.app",
+  messagingSenderId: "931174105381",
+  appId: "1:931174105381:web:6254fd5b4a8eb4d0945acc",
+  measurementId: "G-6NDF8KBEM1"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+// Track signed-in user
+let currentUser = null;
+let hasAccess = false;
+
+auth.onAuthStateChanged(user => {
+if (user) {
+  currentUser = user;
+  console.log("Signed in as:", user.uid);
+} else {
+  auth.signInAnonymously().catch(err => {
+    console.error("Anonymous sign-in failed:", err.message);
   });
+}
+});
   
   // Data arrays
   const scripts = [
@@ -166,11 +164,11 @@ const firebaseConfig = {
     textarea.placeholder = "";
   
     const label1 = document.createElement("label");
-    label1.textContent = "Select item:";
+    label1.textContent = "Select item";
     label1.appendChild(select);
   
     const label2 = document.createElement("label");
-    label2.textContent = "Feedback:";
+    label2.textContent = "Feedback";
     label2.appendChild(textarea);
   
     wrapper.appendChild(label1);
@@ -201,7 +199,7 @@ const firebaseConfig = {
   
     wrapper.innerHTML = `
       <label>
-        What kind of item is it?
+        What is it?
         <select class="suggest-type">
           <option value="">Select one</option>
           <option value="Madame Script">Madame Script</option>
@@ -211,11 +209,11 @@ const firebaseConfig = {
         </select>
       </label>
       <label>
-        What would it be called?
+        Feature Name
         <input type="text" class="suggest-name" />
       </label>
       <label>
-        Briefly describe it:
+        Details
         <textarea class="suggest-description"></textarea>
       </label>
     `;
@@ -315,24 +313,100 @@ const firebaseConfig = {
   }
   
   function toggleResults(button) {
-    const modal = document.getElementById("results-modal");
-  
-    if (!currentUser || !reviewerUIDs.includes(currentUser.uid)) {
-      showAccessDeniedMessage();
-      if (button) flashButtonEffect(button, "error");
+    if (hasAccess) {
+      document.getElementById("results-modal").style.display = "flex";
+      loadResults();
       return;
     }
   
-    if (button) flashButtonEffect(button, "info");
+    const modal = document.getElementById("password-modal");
+    const input = document.getElementById("results-password-input");
+    const buttonEl = document.getElementById("password-submit-btn");
   
-    if (modal.style.display === "flex") {
-      modal.style.display = "none";
-    } else {
-      modal.style.display = "flex";
+    modal.style.display = "flex";
+    input.value = "";
+    buttonEl.textContent = "Submit";
+    buttonEl.classList.remove("error");
+  
+    setTimeout(() => input.focus(), 50);
+  
+    if (button) flashButtonEffect(button, "info");
+  }  
+  
+  function closePasswordModal() {
+    document.getElementById("password-modal").style.display = "none";
+  }
+
+  function submitPassword(event) {
+    event.preventDefault();
+  
+    const input = document.getElementById("results-password-input");
+    const button = document.getElementById("password-submit-btn");
+    const correctPassword = "1280";
+  
+    if (input.value === correctPassword) {
+      hasAccess = true;
+      closePasswordModal();
+      document.getElementById("results-modal").style.display = "flex";
       loadResults();
+  
+      button.textContent = "Submit";
+      button.classList.remove("error");
+    } else {
+      button.textContent = "Incorrect";
+      button.classList.add("error");
+  
+      setTimeout(() => {
+        button.textContent = "Submit";
+        button.classList.remove("error");
+      }, 2000);
     }
   }  
   
+  function submitPassword(event) {
+    event.preventDefault(); // ⛔ stop form submission from reloading page
+  
+    const input = document.getElementById("results-password-input");
+    const button = document.getElementById("password-submit-btn");
+    const correctPassword = "1280";
+  
+    if (input.value === correctPassword) {
+      hasAccess = true;
+      closePasswordModal();
+      document.getElementById("results-modal").style.display = "flex";
+      loadResults();
+  
+      button.textContent = "Submit";
+      button.classList.remove("error");
+    } else {
+      button.textContent = "Incorrect";
+      button.classList.add("error");
+  
+      setTimeout(() => {
+        button.textContent = "Submit";
+        button.classList.remove("error");
+      }, 2500);
+    }
+  }
+  
+  document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("password-form").addEventListener("submit", submitPassword);
+  
+    document.getElementById("password-modal").addEventListener("click", event => {
+      if (event.target === document.getElementById("password-modal")) {
+        closePasswordModal();
+      }
+    });
+  
+    document.getElementById("results-modal").addEventListener("click", event => {
+      if (event.target === document.getElementById("results-modal")) {
+        closeResultsModal();
+      }
+    });
+  
+    document.querySelector("#results-modal .close-btn").addEventListener("click", closeResultsModal);
+  });
+    
   function showAccessDeniedMessage() {
     const msg = document.createElement("div");
     msg.textContent = "Access denied. You're not authorized to view results.";
@@ -568,3 +642,6 @@ const firebaseConfig = {
     window.addEventListener("scroll", applyParallax);
   });
   
+  function closeResultsModal() {
+    document.getElementById("results-modal").style.display = "none";
+  }
