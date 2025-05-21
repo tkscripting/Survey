@@ -17,7 +17,7 @@ const firebaseConfig = {
   // Track signed-in user
   let currentUser = null;
   const reviewerUIDs = [
-    "76ztp530v8Pdjf5hpLh9pejKdXF2"
+    "hb4pd6A2nvNTCUX39vBTvVsET5q1"
   ];
   
   auth.onAuthStateChanged(user => {
