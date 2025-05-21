@@ -209,11 +209,11 @@ if (user) {
         </select>
       </label>
       <label>
-        Feature Name
+        What would it be called?
         <input type="text" class="suggest-name" />
       </label>
       <label>
-        Details
+        What would it do?
         <textarea class="suggest-description"></textarea>
       </label>
     `;
