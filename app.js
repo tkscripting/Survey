@@ -149,14 +149,18 @@ const firebaseConfig = {
   }  
   
   function addFeedbackGroup(button) {
-    const container = document.getElementById("feedback-group-container");
-  
     const wrapper = document.createElement("div");
-    wrapper.classList.add("entry-block", "feedback-entry");
+    wrapper.classList.add("feedback-entry");
+    
+    const container = document.getElementById("feedback-group-container");
+    if (container.children.length > 0) {
+      wrapper.classList.add("entry-block");
+    }
   
     const select = document.createElement("select");
     select.innerHTML = `<option value="">Choose a Script or Action</option>` +
-      allOptions.map(opt => `<option value="${opt}">${opt}</option>`).join("");
+    allOptions.map(opt => `<option value="${opt}">${opt}</option>`).join("") +
+    `<option value="Other">Other</option>`;  
   
     const textarea = document.createElement("textarea");
     textarea.placeholder = "";
@@ -187,10 +191,13 @@ const firebaseConfig = {
   }
   
   function addSuggestionGroup(button) {
-    const container = document.getElementById("suggestion-group-container");
-  
     const wrapper = document.createElement("div");
-    wrapper.classList.add("entry-block", "suggestion-entry");
+    wrapper.classList.add("suggestion-entry");
+    
+    const container = document.getElementById("suggestion-group-container");
+    if (container.children.length > 0) {
+      wrapper.classList.add("entry-block");
+    }
   
     wrapper.innerHTML = `
       <label>
@@ -494,5 +501,70 @@ const firebaseConfig = {
         modal.style.display = "none"; // 👈 directly close, no toggle logic
       }
     });
+  });
+
+  function generateDynamicColor() {
+    const hue = Math.floor(Math.random() * 360);
+    const saturation = Math.floor(Math.random() * 30) + 50; // 50–80%
+    const lightness = Math.floor(Math.random() * 20) + 70; // 70–90%
+    return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+  }
+  
+  function createShapes(containerId, densityFactor, sizeRange, opacity, parallaxFactor) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = "";
+  
+    const shapes = ["circle", "rectangle"];
+    const containerWidth = window.innerWidth;
+    const scrollHeight = document.body.scrollHeight;
+    const viewportHeight = window.innerHeight;
+    const availableHeight = Math.max(scrollHeight, viewportHeight);
+  
+    // ✅ Insert the new shape count logic here:
+    const pixelsPerShape = 400 / densityFactor;
+    const count = Math.floor((availableHeight * 1.5) / pixelsPerShape);
+  
+    // ✅ NEW layout loop goes here:
+    for (let i = 0; i < count; i++) {
+      const shapeType = shapes[Math.floor(Math.random() * shapes.length)];
+      const color = generateDynamicColor();
+      const size = Math.floor(Math.random() * (sizeRange[1] - sizeRange[0])) + sizeRange[0];
+  
+      const x = Math.random() * (containerWidth - size);
+  
+      // Even vertical spread using per-shape zones
+      const zoneHeight = (availableHeight * 1.5) / count;
+      const baseY = i * zoneHeight;
+      const y = baseY + Math.random() * (zoneHeight - size);
+  
+      const shape = document.createElement("div");
+      shape.classList.add("shape", shapeType);
+      shape.style.width = `${size}px`;
+      shape.style.height = `${size}px`;
+      shape.style.backgroundColor = color;
+      shape.style.opacity = opacity;
+      shape.style.left = `${x}px`;
+      shape.style.top = `${y}px`;
+      shape.dataset.offset = y;
+      shape.dataset.parallax = parallaxFactor;
+      shape.style.transform = `rotate(${Math.floor(Math.random() * 360)}deg)`;
+  
+      container.appendChild(shape);
+    }
+  }  
+  
+  function applyParallax() {
+    const scrollY = window.scrollY;
+    document.querySelectorAll(".background-shapes .shape").forEach(shape => {
+      const baseTop = parseFloat(shape.dataset.offset || 0);
+      const factor = parseFloat(shape.dataset.parallax || 0.1);
+      shape.style.top = `${baseTop - scrollY * factor}px`;
+    });
+  }
+  
+  window.addEventListener("load", () => {
+    createShapes("backgroundLayer2", 1.5, [150, 220], 0.35, 0.07, "random"); // BACK: more scattered
+    createShapes("backgroundLayer1", 1, [280, 400], 0.6, 0.15, "grid");      // FRONT: more structured
+    window.addEventListener("scroll", applyParallax);
   });
   

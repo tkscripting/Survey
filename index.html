@@ -7,22 +7,25 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <div class="background-shapes" id="backgroundLayer1"></div>
+  <div class="background-shapes" id="backgroundLayer2"></div>  
+
   <div class="container glass">
     <h1>Feedback Survey</h1>
     <form onsubmit="submitSurvey(); return false;" autocomplete="off">
       
       <div class="section-block">
-        <p class="section-title"><strong>1. Rank the Madame Scripts:</strong></p>
+        <p class="section-title"><strong>Rank Madame Scripts</strong></p>
         <ul id="sortable-scripts"></ul>
       </div>
 
       <div class="section-block">
-        <p class="section-title"><strong>2. Rank the Photoshop Actions:</strong></p>
+        <p class="section-title"><strong>Rank Photoshop Actions</strong></p>
         <ul id="sortable-actions"></ul>
       </div>
 
       <div class="section-block">
-        <p class="section-title"><strong>3. Leave feedback on a specific Script or Action:</strong></p>
+        <p class="section-title"><strong>Leave feedback on a specific Script or Action</strong></p>
         <div id="feedback-group-container"></div>
         <div class="button-pair">
             <button type="button" class="add-button" onclick="addFeedbackGroup(this)">+ Add Another</button>
@@ -31,7 +34,7 @@
       </div>
 
       <div class="section-block">
-        <p class="section-title"><strong>4. Suggest a new feature or tool:</strong></p>
+        <p class="section-title"><strong>Suggest a new feature or tool</strong></p>
         <div id="suggestion-group-container"></div>
         <div class="button-pair">
             <button type="button" class="add-button" onclick="addSuggestionGroup(this)">+ Add Another Suggestion</button>

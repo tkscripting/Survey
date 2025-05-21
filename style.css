@@ -6,16 +6,39 @@
   }
   
   body {
-    background: linear-gradient(
-      135deg,
-      rgba(245, 245, 255, 0.7),
-      rgba(230, 240, 255, 0.7)
-    );
+    margin: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     padding: 2rem 1rem;
     display: flex;
     justify-content: center;
     min-height: 100vh;
+    position: relative;
+    z-index: 1;
+    background: rgba(255, 245, 230, 0.2);
+  }  
+  
+  .background-shapes {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 200vh;
+    z-index: 0;
+    pointer-events: none;
+    overflow: visible;
+  }
+  
+  .shape {
+    position: absolute;
+    transition: transform 1s ease;
+  }
+  
+  .shape.circle {
+    border-radius: 50%;
+  }
+  
+  .shape.rectangle {
+    border-radius: 12px;
   }
   
   body.modal-open {
@@ -312,4 +335,3 @@
   #submitBtn {
     margin: 0;
   }
-  
