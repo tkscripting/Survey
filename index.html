@@ -3,75 +3,61 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Script Ranking Survey</title>
+  <title>Feedback Survey</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container glass">
-    <h1>Rank the Madame Scripts</h1>
-    <form onsubmit="submitSurvey(); return false;">
-      <p>Drag to reorder the scripts from your favorite (top) to least favorite (bottom):</p>
-      <ul id="sortable-list"></ul>
-      <button type="submit">Submit</button>
-      <p id="message"></p>
+    <h1>Feedback Survey</h1>
+    <form onsubmit="submitSurvey(); return false;" autocomplete="off">
+      
+      <div class="section-block">
+        <p class="section-title"><strong>1. Rank the Madame Scripts:</strong></p>
+        <ul id="sortable-scripts"></ul>
+      </div>
+
+      <div class="section-block">
+        <p class="section-title"><strong>2. Rank the Photoshop Actions:</strong></p>
+        <ul id="sortable-actions"></ul>
+      </div>
+
+      <div class="section-block">
+        <p class="section-title"><strong>3. Leave feedback on a specific Script or Action:</strong></p>
+        <div id="feedback-group-container"></div>
+        <div class="button-pair">
+            <button type="button" class="add-button" onclick="addFeedbackGroup(this)">+ Add Another</button>
+            <button type="button" class="remove-button" onclick="removeFeedbackGroup(this)">− Remove Last</button>
+          </div>    
+      </div>
+
+      <div class="section-block">
+        <p class="section-title"><strong>4. Suggest a new feature or tool:</strong></p>
+        <div id="suggestion-group-container"></div>
+        <div class="button-pair">
+            <button type="button" class="add-button" onclick="addSuggestionGroup(this)">+ Add Another Suggestion</button>
+            <button type="button" class="remove-button" onclick="removeSuggestionGroup(this)">− Remove Last</button>
+          </div> 
+      </div>
+
+      <div class="form-button-group">
+        <button id="submitBtn" type="submit" class="submit-button">Submit</button>
+        <button type="button" class="info" onclick="toggleResults(this)">View Results</button>
+      </div>      
+      
     </form>
   </div>
 
-  <script type="module" src="app.js"></script>
-  <script>
-    const scripts = [
-      "Better Scrolling",
-      "Clear Colors",
-      "Filter By Color & Name",
-      "Odd One Out",
-      "Optimize List",
-      "PID Adder",
-      "PID to VID Search",
-      "Refresh Search",
-      "Retouching Extras",
-      "Runway Check",
-      "VID Comparison"
-    ];
+  <div id="results-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <span class="close-btn" onclick="toggleResults()">&times;</span>
+      <div id="results-container"></div>
+    </div>
+  </div>
 
-    const sortableList = document.getElementById("sortable-list");
-    scripts.forEach(script => {
-      const li = document.createElement("li");
-      li.textContent = script;
-      li.draggable = true;
-      li.classList.add("draggable-item");
-      sortableList.appendChild(li);
-    });
-
-    let draggedItem = null;
-
-    document.querySelectorAll(".draggable-item").forEach(item => {
-      item.addEventListener("dragstart", function () {
-        draggedItem = item;
-        setTimeout(() => item.style.display = "none", 0);
-      });
-
-      item.addEventListener("dragend", function () {
-        setTimeout(() => {
-          draggedItem.style.display = "block";
-          draggedItem = null;
-        }, 0);
-      });
-
-      item.addEventListener("dragover", e => e.preventDefault());
-
-      item.addEventListener("drop", function () {
-        if (draggedItem !== this) {
-          const allItems = [...sortableList.querySelectorAll(".draggable-item")];
-          const draggedIndex = allItems.indexOf(draggedItem);
-          const targetIndex = allItems.indexOf(this);
-          if (draggedIndex < targetIndex) {
-            sortableList.insertBefore(draggedItem, this.nextSibling);
-          } else {
-            sortableList.insertBefore(draggedItem, this);
-          }
-        }
-      });
-    });
-  </script>
+  <!-- Firebase + App -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
